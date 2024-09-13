@@ -1,6 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+
+
+
+// #nullable disable
 
 using System;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace razor09_razorweb.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
+        public string RetunUrl { get; set; }
 
         public LogoutModel(SignInManager<AppUser> signInManager, ILogger<LogoutModel> logger)
         {
@@ -26,17 +28,28 @@ namespace razor09_razorweb.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            // var user = new AppUser{UserName = Input.UserName, Email = Input.Email}
+            // Đăng kí var result = await _signInManager.CreateAsync(user, Input.Password) (Đăng kí với user và password)
+            // Đăng nhập var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, LockoutOnFailure: false)
+            // Đăng xuất await _signInManager.SignOutAsync();
+            // if(returnUrl != null){
+            //    return LocalRedirect(returnUrl);
+            //}
+            // else{
+            //    RedirectToPage();
+            //}
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+
+            _logger.LogInformation("Đã đăng xuất tài khoản");
+
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);
             }
             else
             {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
-                return RedirectToPage();
+                returnUrl = Url.Content("~/");
+                return LocalRedirect(returnUrl);
             }
         }
     }
